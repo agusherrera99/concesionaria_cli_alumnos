@@ -38,4 +38,4 @@ class MenuPrincipal:
                     break
                 case _:
                     print("Opción no valida.")
-                    input("Presiona Enter para volver a intentarlo...")
+                    input(cleandoc("Presiona Enter para volver a intentarlo..."))
