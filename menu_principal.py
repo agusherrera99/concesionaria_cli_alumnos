@@ -1,41 +1,39 @@
 import os
-
 from inspect import cleandoc
+import menu_autos
 
-from menu_autos import MenuAutos
 
+def iniciar():
+    """Punto de entrada para el programa."""
+    mostrar_menu_principal()
 
-class MenuPrincipal:
-    def __init__(self):
-        pass
+def limpiar_menu():
+    """Limpia la terminal."""
+    os.system("cls" if os.name == "nt" else "clear")
 
-    def iniciar(self):
-        self.principal()
+def mostrar_menu_principal():
+    """Muestra el menú de nivel superior de la aplicación."""
+    mensaje = """
+    =============
+    CONCESIONARIA
+    =============
 
-    def limpiar_menu(self):
-        os.system("cls" if os.name == "nt" else "clear")
+    1. Autos en stock
+    0. Salir
 
-    def principal(self):
-        mensaje = """
-        =============
-        CONCESIONARIA
-        =============
+    ¿Qué quieres hacer? """
 
-        1. Autos en stock
-        0. Salir
+    while True:
+        limpiar_menu()
+        opcion_seleccionada = input(cleandoc(mensaje))
 
-        ¿Qué quieres hacer? """
-
-        while True:
-            self.limpiar_menu()
-            opcion_seleccionada = input(cleandoc(mensaje))
-
-            match opcion_seleccionada:
-                case "1":
-                    self.limpiar_menu()
-                    MenuAutos().iniciar()
-                case "0":
-                    break
-                case _:
-                    print("Opción no valida.")
-                    input(cleandoc("Presiona Enter para volver a intentarlo..."))
+        match opcion_seleccionada:
+            case "1":
+                limpiar_menu()
+                menu_autos.iniciar()
+            case "0":
+                print("\n¡Gracias por usar el sistema! Hasta pronto.")
+                break
+            case _:
+                print("\nOpción no válida.")
+                input("Presiona Enter para volver a intentarlo...")
