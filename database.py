@@ -1,38 +1,89 @@
 """
 Este archivo funciona como nuestra base de datos.
-Como todavía no usamos archivos o bases de datos reales,
-guardamos todo en listas de Python mientras el programa esté prendido.
+Ahora usamos archivos JSON para que los datos NO se borren al cerrar el programa.
 """
 
-# --- ALMACENAMIENTO DE AUTOS ---
-# Usamos una lista para guardar cada auto (que será un diccionario)
+import json
+import os
+
+# Nombres de nuestros "archivos-base de datos"
+ARCHIVO_AUTOS = "autos.json"
+ARCHIVO_CLIENTES = "clientes.json"
+
+# --- ALMACENAMIENTO TEMPORAL EN MEMORIA ---
 lista_de_autos = []
-# Este contador nos sirve para que cada auto tenga un número único (ID)
 contador_id_autos = 1
 
-# --- ALMACENAMIENTO DE CLIENTES ---
 lista_de_clientes = []
 contador_id_clientes = 1
+
+
+# ============================================================
+# FUNCIONES PARA MANEJAR ARCHIVOS (JSON)
+# ============================================================
+
+def guardar_datos_en_json():
+    """
+    Toma las listas que tenemos en memoria y las guarda en archivos .json.
+    Así, la próxima vez que abramos el programa, los datos seguirán ahí.
+    """
+    # Guardamos los autos
+    data_autos = {
+        "contador": contador_id_autos,
+        "lista": lista_de_autos
+    }
+    # Usamos 'w' (write) para escribir el archivo
+    with open(ARCHIVO_AUTOS, "w") as f:
+        # json.dump convierte diccionarios/listas de Python a formato JSON
+        # default=str es para que sepa cómo guardar las fechas (date)
+        json.dump(data_autos, f, indent=4, default=str)
+
+    # Guardamos los clientes
+    data_clientes = {
+        "contador": contador_id_clientes,
+        "lista": lista_de_clientes
+    }
+    with open(ARCHIVO_CLIENTES, "w") as f:
+        json.dump(data_clientes, f, indent=4)
+
+
+def cargar_datos_desde_json():
+    """
+    Lee los archivos .json al inicio del programa para llenar nuestras listas.
+    """
+    global lista_de_autos, contador_id_autos, lista_de_clientes, contador_id_clientes
+
+    # Cargamos Autos
+    if os.path.exists(ARCHIVO_AUTOS):
+        with open(ARCHIVO_AUTOS, "r") as f:
+            data = json.load(f)
+            lista_de_autos = data["lista"]
+            contador_id_autos = data["contador"]
+    
+    # Cargamos Clientes
+    if os.path.exists(ARCHIVO_CLIENTES):
+        with open(ARCHIVO_CLIENTES, "r") as f:
+            data = json.load(f)
+            lista_de_clientes = data["lista"]
+            contador_id_clientes = data["contador"]
+
+# Llamamos a esta función apenas se importa este archivo para cargar todo
+cargar_datos_desde_json()
 
 
 # ============================================================
 # FUNCIONES PARA GESTIONAR AUTOS
 # ============================================================
 
-
 def obtener_todos():
-    """Simplemente devuelve la lista completa de autos que tenemos."""
+    """Simplemente devuelve la lista completa de autos."""
     return lista_de_autos
 
 
 def guardar_auto(datos_auto):
-    """
-    Recibe los datos de un auto nuevo, le asigna un ID único
-    y lo guarda en nuestra lista de stock.
-    """
+    """Recibe un auto nuevo, lo guarda en la lista y actualiza el archivo JSON."""
     global contador_id_autos
-
-    # Creamos un diccionario para que los datos estén organizados y sean fáciles de leer
+    
     auto_dict = {
         "id": contador_id_autos,
         "patente": datos_auto[0],
@@ -42,25 +93,21 @@ def guardar_auto(datos_auto):
         "kilometros": datos_auto[4],
         "precio": datos_auto[5],
         "estado": datos_auto[6],
-        "fecha_ingreso": datos_auto[7],
+        "fecha_ingreso": str(datos_auto[7]), # Lo pasamos a texto para JSON
     }
-
+    
     lista_de_autos.append(auto_dict)
-    # Sumamos 1 para que el próximo auto tenga el número siguiente
     contador_id_autos += 1
+    
+    # ¡Importante! Después de cambiar la lista, guardamos en el archivo
+    guardar_datos_en_json()
 
 
 def buscar_por_campo(campo, valor):
-    """
-    Busca autos que coincidan con un valor en un campo específico.
-    Por ejemplo: buscar todos los que tengan la marca 'Ford'.
-    """
-    # Creamos una lista vacía para ir guardando los que coincidan
+    """Busca autos que coincidan con un valor en un campo específico."""
     resultados = []
     for auto in lista_de_autos:
-        # Si el valor del auto coincide con lo que buscamos...
         if str(auto[campo]).lower() == str(valor).lower():
-            # ... lo agregamos a nuestra lista de resultados
             resultados.append(auto)
     return resultados
 
@@ -79,7 +126,7 @@ def buscar_por_patente(patente):
     for auto in lista_de_autos:
         if auto["patente"].lower() == patente.lower():
             return auto
-    return None # Si no lo encuentra, devuelve 'nada'
+    return None
 
 
 def buscar_por_id(id_auto):
@@ -91,23 +138,23 @@ def buscar_por_id(id_auto):
 
 
 def cambiar_estado(id_auto, nuevo_estado):
-    """Busca el auto por su ID y le cambia el estado (ej: de 'Disponible' a 'Vendido')."""
+    """Busca el auto por su ID, cambia su estado y guarda en el JSON."""
     for auto in lista_de_autos:
         if auto["id"] == id_auto:
             auto["estado"] = nuevo_estado
             break
+    guardar_datos_en_json()
 
 
 def dar_de_baja(id_auto):
-    """Elimina definitivamente un auto de nuestra lista de stock."""
+    """Elimina un auto y actualiza el archivo JSON."""
     global lista_de_autos
-    # Creamos una lista nueva donde pondremos todos los que NO queremos borrar
     nueva_lista = []
     for auto in lista_de_autos:
         if auto["id"] != id_auto:
             nueva_lista.append(auto)
-    # Reemplazamos la lista vieja por la nueva
     lista_de_autos = nueva_lista
+    guardar_datos_en_json()
 
 
 # ============================================================
@@ -115,16 +162,14 @@ def dar_de_baja(id_auto):
 # ============================================================
 
 def obtener_todos_clientes():
-    """Devuelve la lista de todos nuestros clientes registrados."""
+    """Devuelve la lista de todos nuestros clientes."""
     return lista_de_clientes
 
 
 def guardar_cliente(datos_cliente):
-    """
-    Registra un cliente nuevo asignándole un ID autoincremental.
-    """
+    """Registra un cliente nuevo y guarda en el archivo JSON."""
     global contador_id_clientes
-
+    
     cliente_dict = {
         "id": contador_id_clientes,
         "dni": datos_cliente["dni"],
@@ -133,12 +178,14 @@ def guardar_cliente(datos_cliente):
         "email": datos_cliente.get("email", ""),
         "localidad": datos_cliente["localidad"],
         "busqueda": datos_cliente["busqueda"],
-        "compras": [],  # Acá guardaremos los IDs de los autos que compre
-        "reservas": [], # Acá guardaremos los IDs de los autos que reserve
+        "compras": [],
+        "reservas": [],
     }
-
+    
     lista_de_clientes.append(cliente_dict)
     contador_id_clientes += 1
+    
+    guardar_datos_en_json()
     return cliente_dict["id"]
 
 
@@ -161,21 +208,21 @@ def buscar_clientes_por_nombre(nombre):
 
 
 def actualizar_cliente(id_cliente, nuevos_datos):
-    """Busca al cliente y actualiza sus datos de contacto."""
+    """Actualiza datos de un cliente y guarda en el JSON."""
     for cliente in lista_de_clientes:
         if cliente["id"] == id_cliente:
-            # .update() pisa los datos viejos con los nuevos que le pasemos
             cliente.update(nuevos_datos)
+            guardar_datos_en_json()
             return True
     return False
 
 
 def eliminar_cliente(id_cliente):
-    """Borra a un cliente de nuestra base (si pidió no figurar más)."""
+    """Borra a un cliente y actualiza el archivo JSON."""
     global lista_de_clientes
     nueva_lista = []
     for c in lista_de_clientes:
         if c["id"] != id_cliente:
             nueva_lista.append(c)
     lista_de_clientes = nueva_lista
-
+    guardar_datos_en_json()
