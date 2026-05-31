@@ -1,9 +1,21 @@
 import auto
+import os
+import database
 from datetime import date
 
 
 def ejecutar_tests():
-    print("=== INICIANDO PRUEBAS DE FUNCIONALIDAD (SIN CLASES / EN MEMORIA) ===\n")
+    print("=== INICIANDO PRUEBAS DE FUNCIONALIDAD (SIN CLASES / CON JSON) ===\n")
+
+    # Limpiar archivos JSON de pruebas anteriores para empezar de cero
+    if os.path.exists("autos.json"): os.remove("autos.json")
+    if os.path.exists("clientes.json"): os.remove("clientes.json")
+    
+    # Reiniciamos la memoria de la "base de datos" para este test
+    database.lista_de_autos = []
+    database.contador_id_autos = 1
+    database.lista_de_clientes = []
+    database.contador_id_clientes = 1
 
     # 1. Test de Carga (Alta)
     print("1. Probando carga de autos...")
@@ -90,8 +102,9 @@ def ejecutar_tests():
     print("8. Verificando tipos nativos (Diccionarios y Fechas)...")
     un_auto = despues_baja[0]
     assert isinstance(un_auto, dict), "Error: El registro no es un diccionario"
-    assert isinstance(un_auto["fecha_ingreso"], date), (
-        "Error: La fecha no es un objeto date"
+    # Al usar JSON, las fechas se guardan como texto (str)
+    assert isinstance(un_auto["fecha_ingreso"], (date, str)), (
+        "Error: La fecha no es un objeto date ni un string"
     )
     print("   [OK] Tipos nativos verificados.")
 
