@@ -1,10 +1,8 @@
 """
 Este archivo funciona como nuestra base de datos.
-Como todavía no usamos archivos o bases de datos reales, 
+Como todavía no usamos archivos o bases de datos reales,
 guardamos todo en listas de Python mientras el programa esté prendido.
 """
-
-from datetime import date
 
 # --- ALMACENAMIENTO DE AUTOS ---
 # Usamos una lista para guardar cada auto (que será un diccionario)
@@ -21,6 +19,7 @@ contador_id_clientes = 1
 # FUNCIONES PARA GESTIONAR AUTOS
 # ============================================================
 
+
 def obtener_todos():
     """Simplemente devuelve la lista completa de autos que tenemos."""
     return lista_de_autos
@@ -28,11 +27,11 @@ def obtener_todos():
 
 def guardar_auto(datos_auto):
     """
-    Recibe los datos de un auto nuevo, le asigna un ID único 
+    Recibe los datos de un auto nuevo, le asigna un ID único
     y lo guarda en nuestra lista de stock.
     """
     global contador_id_autos
-    
+
     # Creamos un diccionario para que los datos estén organizados y sean fáciles de leer
     auto_dict = {
         "id": contador_id_autos,
@@ -45,7 +44,7 @@ def guardar_auto(datos_auto):
         "estado": datos_auto[6],
         "fecha_ingreso": datos_auto[7],
     }
-    
+
     lista_de_autos.append(auto_dict)
     # Sumamos 1 para que el próximo auto tenga el número siguiente
     contador_id_autos += 1
@@ -56,13 +55,23 @@ def buscar_por_campo(campo, valor):
     Busca autos que coincidan con un valor en un campo específico.
     Por ejemplo: buscar todos los que tengan la marca 'Ford'.
     """
-    # Usamos una 'list comprehension' que es como un filtro rápido de Python
-    return [auto for auto in lista_de_autos if str(auto[campo]).lower() == str(valor).lower()]
+    # Creamos una lista vacía para ir guardando los que coincidan
+    resultados = []
+    for auto in lista_de_autos:
+        # Si el valor del auto coincide con lo que buscamos...
+        if str(auto[campo]).lower() == str(valor).lower():
+            # ... lo agregamos a nuestra lista de resultados
+            resultados.append(auto)
+    return resultados
 
 
 def buscar_por_rango_precio(minimo, maximo):
     """Busca autos que estén dentro de un rango de precios."""
-    return [auto for auto in lista_de_autos if minimo <= auto["precio"] <= maximo]
+    resultados = []
+    for auto in lista_de_autos:
+        if minimo <= auto["precio"] <= maximo:
+            resultados.append(auto)
+    return resultados
 
 
 def buscar_por_patente(patente):
@@ -92,8 +101,13 @@ def cambiar_estado(id_auto, nuevo_estado):
 def dar_de_baja(id_auto):
     """Elimina definitivamente un auto de nuestra lista de stock."""
     global lista_de_autos
-    # Filtramos la lista: dejamos todos los autos MENOS el que queremos borrar
-    lista_de_autos = [auto for auto in lista_de_autos if auto["id"] != id_auto]
+    # Creamos una lista nueva donde pondremos todos los que NO queremos borrar
+    nueva_lista = []
+    for auto in lista_de_autos:
+        if auto["id"] != id_auto:
+            nueva_lista.append(auto)
+    # Reemplazamos la lista vieja por la nueva
+    lista_de_autos = nueva_lista
 
 
 # ============================================================
@@ -110,7 +124,7 @@ def guardar_cliente(datos_cliente):
     Registra un cliente nuevo asignándole un ID autoincremental.
     """
     global contador_id_clientes
-    
+
     cliente_dict = {
         "id": contador_id_clientes,
         "dni": datos_cliente["dni"],
@@ -122,7 +136,7 @@ def guardar_cliente(datos_cliente):
         "compras": [],  # Acá guardaremos los IDs de los autos que compre
         "reservas": [], # Acá guardaremos los IDs de los autos que reserve
     }
-    
+
     lista_de_clientes.append(cliente_dict)
     contador_id_clientes += 1
     return cliente_dict["id"]
@@ -139,7 +153,11 @@ def buscar_cliente_por_dni(dni):
 def buscar_clientes_por_nombre(nombre):
     """Busca clientes que tengan ese nombre (o parte de él)."""
     nombre_buscado = nombre.lower()
-    return [c for c in lista_de_clientes if nombre_buscado in c["nombre"].lower()]
+    resultados = []
+    for c in lista_de_clientes:
+        if nombre_buscado in c["nombre"].lower():
+            resultados.append(c)
+    return resultados
 
 
 def actualizar_cliente(id_cliente, nuevos_datos):
@@ -155,4 +173,9 @@ def actualizar_cliente(id_cliente, nuevos_datos):
 def eliminar_cliente(id_cliente):
     """Borra a un cliente de nuestra base (si pidió no figurar más)."""
     global lista_de_clientes
-    lista_de_clientes = [c for c in lista_de_clientes if c["id"] != id_cliente]
+    nueva_lista = []
+    for c in lista_de_clientes:
+        if c["id"] != id_cliente:
+            nueva_lista.append(c)
+    lista_de_clientes = nueva_lista
+

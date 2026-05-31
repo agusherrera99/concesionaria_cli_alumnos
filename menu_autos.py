@@ -1,5 +1,5 @@
 """
-En este archivo manejamos toda la interacción con el usuario 
+En este archivo manejamos toda la interacción con el usuario
 referida a los autos en stock.
 """
 
@@ -16,6 +16,7 @@ def iniciar():
 
 # --- FUNCIONES DE AYUDA (Para no repetir código) ---
 
+
 def limpiar_menu():
     """Limpia la pantalla según el sistema operativo."""
     os.system("cls" if os.name == "nt" else "clear")
@@ -23,7 +24,7 @@ def limpiar_menu():
 
 def leer_entero(mensaje):
     """
-    Esta función es muy útil: pide un dato y se asegura 
+    Esta función es muy útil: pide un dato y se asegura
     de que el usuario escriba un número y no letras.
     """
     while True:
@@ -46,10 +47,14 @@ def seleccionar_estado():
     while True:
         opcion = input(cleandoc(mensaje))
         match opcion:
-            case "1": return "disponible"
-            case "2": return "reservado"
-            case "3": return "vendido"
-            case "4": return "en taller"
+            case "1":
+                return "disponible"
+            case "2":
+                return "reservado"
+            case "3":
+                return "vendido"
+            case "4":
+                return "en taller"
             case _:
                 print("\nOpción inválida. Elegí del 1 al 4.")
 
@@ -58,12 +63,15 @@ def pedir_confirmacion():
     """Pide un Sí o un No para acciones importantes."""
     while True:
         confirmar = input("\n¿Estás seguro? (1: Sí / 0: No): ")
-        if confirmar == "1": return True
-        if confirmar == "0": return False
+        if confirmar == "1":
+            return True
+        if confirmar == "0":
+            return False
         print("Escribí 1 para Sí o 0 para No.")
 
 
 # --- FUNCIONES PRINCIPALES DEL MENÚ ---
+
 
 def cargar_auto_nuevo():
     """Pide los datos de un auto y le pide a la lógica que lo guarde."""
@@ -77,15 +85,24 @@ def cargar_auto_nuevo():
         kilometros = leer_entero("Kilómetros actuales: ")
         precio = leer_entero("Precio de venta: ")
         estado = seleccionar_estado()
-        
+
         # Para la fecha, pedimos los datos por separado para no complicar al alumno
         fecha_str = input("Fecha de hoy (DD/MM/AAAA): ")
-        dia, mes, anio_f = map(int, fecha_str.split('/'))
+        dia, mes, anio_f = map(int, fecha_str.split("/"))
         fecha_ingreso = date(anio_f, mes, dia)
 
         if pedir_confirmacion():
             # Juntamos todo en una 'tupla' para mandarlo más fácil
-            datos = (patente, marca, modelo, anio, kilometros, precio, estado, fecha_ingreso)
+            datos = (
+                patente,
+                marca,
+                modelo,
+                anio,
+                kilometros,
+                precio,
+                estado,
+                fecha_ingreso,
+            )
             auto.guardar_auto(datos)
             print("\n¡Genial! El auto se cargó al stock.")
         else:
@@ -102,7 +119,9 @@ def mostrar_resultados(listado, criterio):
     if listado:
         print(f"\n--- Resultados para: {criterio} ---")
         for a in listado:
-            print(f"ID: {a['id']} | {a['marca']} {a['modelo']} ({a['patente']}) | ${a['precio']} | {a['estado']}")
+            print(
+                f"ID: {a['id']} | {a['marca']} {a['modelo']} ({a['patente']}) | ${a['precio']} | {a['estado']}"
+            )
     else:
         print(f"\nNo encontré nada para {criterio}.")
     input("\nPresiona Enter para volver...")
@@ -139,7 +158,8 @@ def filtrar_listado():
                 est = seleccionar_estado()
                 resultados = auto.seleccionar_por("estado", est)
                 mostrar_resultados(resultados, est)
-            case "0": break
+            case "0":
+                break
 
 
 def ver_listado_completo():
@@ -148,7 +168,9 @@ def ver_listado_completo():
     if listado:
         print("\n--- STOCK COMPLETO ---")
         for a in listado:
-            print(f"ID: {a['id']} | {a['marca']} {a['modelo']} | Patente: {a['patente']} | ${a['precio']} | {a['estado']}")
+            print(
+                f"ID: {a['id']} | {a['marca']} {a['modelo']} | Patente: {a['patente']} | ${a['precio']} | {a['estado']}"
+            )
     else:
         print("\nTodavía no hay autos en el sistema.")
     input("\nPresiona Enter para volver...")
@@ -159,7 +181,7 @@ def buscar_auto_individual():
     print("\n1. Buscar por Patente")
     print("2. Buscar por ID Interno")
     op = input("Elegí una opción: ")
-    
+
     if op == "1":
         pat = input("Escribí la patente: ")
         encontrado = auto.seleccionar_auto_por_patente(pat)
@@ -180,7 +202,7 @@ def cambiar_estado_auto():
     """Busca un auto y le cambia el estado (ej: si se vendió)."""
     idx = leer_entero("\nIngresá el ID del auto a modificar: ")
     encontrado = auto.seleccionar_auto_por_numero_interno(idx)
-    
+
     if encontrado:
         print(f"\nModificando {encontrado['marca']} {encontrado['modelo']}")
         print(f"Estado actual: {encontrado['estado']}")
@@ -196,7 +218,7 @@ def borrar_auto():
     """Elimina un auto del sistema."""
     idx = leer_entero("\nIngresá el ID del auto a eliminar: ")
     encontrado = auto.seleccionar_auto_por_numero_interno(idx)
-    
+
     if encontrado:
         print(f"\nVas a borrar el auto: {encontrado['marca']} {encontrado['modelo']}")
         if pedir_confirmacion():
@@ -230,13 +252,20 @@ def mostrar_menu_principal_autos():
         limpiar_menu()
         opcion = input(cleandoc(mensaje))
         match opcion:
-            case "1": cargar_auto_nuevo()
-            case "2": ver_listado_completo()
-            case "3": filtrar_listado()
-            case "4": buscar_auto_individual()
-            case "5": cambiar_estado_auto()
-            case "6": borrar_auto()
-            case "0": break
+            case "1":
+                cargar_auto_nuevo()
+            case "2":
+                ver_listado_completo()
+            case "3":
+                filtrar_listado()
+            case "4":
+                buscar_auto_individual()
+            case "5":
+                cambiar_estado_auto()
+            case "6":
+                borrar_auto()
+            case "0":
+                break
             case _:
                 print("\nOpción inválida.")
                 input("Presiona Enter para continuar...")

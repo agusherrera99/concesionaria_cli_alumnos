@@ -1,6 +1,6 @@
 """
 Este es el punto de inicio de nuestro programa.
-Desde acá el usuario puede elegir si quiere ir a la sección de Autos 
+Desde acá el usuario puede elegir si quiere ir a la sección de Autos
 o a la sección de Clientes.
 """
 
@@ -23,7 +23,7 @@ def limpiar_menu():
 
 def mostrar_menu_principal():
     """Dibuja el menú principal en la pantalla."""
-    
+
     # Usamos cleandoc para que el texto multilínea no tenga espacios raros al principio
     mensaje = """
     =========================
@@ -45,13 +45,13 @@ def mostrar_menu_principal():
         match opcion_seleccionada:
             case "1":
                 limpiar_menu()
-                menu_autos.iniciar() # Nos vamos al menú de autos
+                menu_autos.iniciar()  # Nos vamos al menú de autos
             case "2":
                 limpiar_menu()
-                menu_clientes.iniciar() # Nos vamos al menú de clientes
+                menu_clientes.iniciar()  # Nos vamos al menú de clientes
             case "0":
                 print("\n¡Gracias por usar el sistema! Hasta pronto.")
-                break # Sale del ciclo y termina el programa
+                break  # Sale del ciclo y termina el programa
             case _:
                 print("\nEsa opción no es válida. ¡Intentá de nuevo!")
                 input("Presiona Enter para continuar...")

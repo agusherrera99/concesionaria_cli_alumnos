@@ -1,6 +1,6 @@
 """
-Este módulo maneja la 'lógica' de los autos. 
-Sirve como un puente: el menú le pide cosas a este archivo, 
+Este módulo maneja la 'lógica' de los autos.
+Sirve como un puente: el menú le pide cosas a este archivo,
 y este archivo se comunica con la base de datos (database.py).
 """
 

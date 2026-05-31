@@ -1,6 +1,6 @@
 """
 Este módulo maneja la 'lógica' de los clientes.
-Al igual que con los autos, separa lo que ve el usuario (el menú) 
+Al igual que con los autos, separa lo que ve el usuario (el menú)
 de cómo se guardan los datos (la base de datos).
 """
 

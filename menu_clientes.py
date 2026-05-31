@@ -1,5 +1,5 @@
 """
-En este archivo manejamos toda la interacción con el usuario 
+En este archivo manejamos toda la interacción con el usuario
 referida a la gestión de clientes.
 """
 
@@ -32,17 +32,24 @@ def iniciar():
         0. Volver al menú principal
 
         ¿Qué quieres hacer? """
-        
+
         opcion = input(cleandoc(mensaje))
 
         match opcion:
-            case "1": registrar_nuevo_cliente()
-            case "2": mostrar_todos_los_clientes()
-            case "3": buscar_cliente_dni()
-            case "4": buscar_cliente_nombre()
-            case "5": actualizar_datos_cliente()
-            case "6": dar_de_baja_cliente()
-            case "0": break
+            case "1":
+                registrar_nuevo_cliente()
+            case "2":
+                mostrar_todos_los_clientes()
+            case "3":
+                buscar_cliente_dni()
+            case "4":
+                buscar_cliente_nombre()
+            case "5":
+                actualizar_datos_cliente()
+            case "6":
+                dar_de_baja_cliente()
+            case "0":
+                break
             case _:
                 print("\nOpción no válida.")
                 input("Presiona Enter para continuar...")
@@ -52,7 +59,7 @@ def registrar_nuevo_cliente():
     """Pide los datos para dar de alta a un cliente nuevo."""
     print("\n--- REGISTRO DE NUEVO CLIENTE ---")
     dni = input("DNI: ")
-    
+
     # Primero chequeamos que no esté ya registrado
     if cliente.buscar_por_dni(dni):
         print("¡Ojo! Ya tenemos un cliente con ese DNI.")
@@ -72,9 +79,9 @@ def registrar_nuevo_cliente():
         "telefono": telefono,
         "email": email,
         "localidad": localidad,
-        "busqueda": busqueda
+        "busqueda": busqueda,
     }
-    
+
     # Se lo mandamos a la lógica para que lo guarde
     id_cliente = cliente.registrar_cliente(datos)
     print(f"\n¡Listo! Cliente guardado. Su número de cliente es: {id_cliente}")
@@ -108,7 +115,7 @@ def buscar_cliente_nombre():
     """Busca clientes por nombre y permite elegir uno para ver su detalle."""
     nombre = input("\nIngresa el nombre (o parte del nombre) a buscar: ")
     resultados = cliente.buscar_por_nombre(nombre)
-    
+
     if not resultados:
         print("No encontré coincidencias.")
     elif len(resultados) == 1:
@@ -117,11 +124,16 @@ def buscar_cliente_nombre():
         print("\n--- SELECCIONÁ UN CLIENTE ---")
         for c in resultados:
             print(f"ID: {c['id']} | DNI: {c['dni']} | Nombre: {c['nombre']}")
-        
+
         id_sel = input("\nEscribí el ID para ver el detalle completo (o Enter para salir): ")
         if id_sel:
             # Buscamos en los resultados el que coincida con el ID ingresado
-            c_sel = next((c for c in resultados if str(c['id']) == id_sel), None)
+            c_sel = None
+            for c in resultados:
+                if str(c['id']) == id_sel:
+                    c_sel = c
+                    break
+
             if c_sel:
                 mostrar_detalle_cliente(c_sel)
             else:
@@ -131,19 +143,19 @@ def buscar_cliente_nombre():
 
 def mostrar_detalle_cliente(c):
     """
-    Esta función es clave: muestra TODA la info del cliente, 
+    Esta función es clave: muestra TODA la info del cliente,
     incluyendo qué autos compró o reservó.
     """
-    print("\n" + "="*40)
+    print("\n" + "=" * 40)
     print(f"FICHA DEL CLIENTE - ID: {c['id']}")
-    print("="*40)
+    print("=" * 40)
     print(f"DNI:       {c['dni']}")
     print(f"Nombre:    {c['nombre']}")
     print(f"Teléfono:  {c['telefono']}")
     print(f"Email:     {c['email']}")
     print(f"Localidad: {c['localidad']}")
     print(f"Búsqueda:  {c['busqueda']}")
-    
+
     # Mostramos los autos vinculados (compras)
     print("\n--- AUTOS COMPRADOS ---")
     if not c["compras"]:
@@ -164,32 +176,36 @@ def mostrar_detalle_cliente(c):
             a = auto.seleccionar_auto_por_numero_interno(auto_id)
             if a:
                 print(f"-> {a['marca']} {a['modelo']} (Patente: {a['patente']})")
-    print("="*40)
+    print("=" * 40)
 
 
 def actualizar_datos_cliente():
     """Permite cambiar el teléfono, email, etc. de un cliente."""
     dni = input("\nIngresa el DNI del cliente a actualizar: ")
     c = cliente.buscar_por_dni(dni)
-    
+
     if not c:
         print("Cliente no encontrado.")
     else:
         print(f"\nModificando datos de: {c['nombre']}")
         print("(Si no querés cambiar un dato, simplemente presiona Enter)")
-        
+
         nuevo_tel = input(f"Nuevo Teléfono (actual: {c['telefono']}): ")
         nuevo_email = input(f"Nuevo Email (actual: {c['email']}): ")
         nueva_loc = input(f"Nueva Localidad (actual: {c['localidad']}): ")
         nueva_busq = input(f"Nueva Búsqueda (actual: {c['busqueda']}): ")
-        
+
         # Armamos un diccionario solo con lo que el usuario escribió
         nuevos_datos = {}
-        if nuevo_tel: nuevos_datos["telefono"] = nuevo_tel
-        if nuevo_email: nuevos_datos["email"] = nuevo_email
-        if nueva_loc: nuevos_datos["localidad"] = nueva_loc
-        if nueva_busq: nuevos_datos["busqueda"] = nueva_busq
-        
+        if nuevo_tel:
+            nuevos_datos["telefono"] = nuevo_tel
+        if nuevo_email:
+            nuevos_datos["email"] = nuevo_email
+        if nueva_loc:
+            nuevos_datos["localidad"] = nueva_loc
+        if nueva_busq:
+            nuevos_datos["busqueda"] = nueva_busq
+
         if nuevos_datos:
             cliente.actualizar_datos(c["id"], nuevos_datos)
             print("¡Datos actualizados con éxito!")
@@ -202,12 +218,12 @@ def dar_de_baja_cliente():
     """Elimina a un cliente si pide no figurar más."""
     dni = input("\nIngresa el DNI del cliente a eliminar: ")
     c = cliente.buscar_por_dni(dni)
-    
+
     if not c:
         print("No encontré a ese cliente.")
     else:
         confirmar = input(f"¿Estás seguro de borrar a {c['nombre']}? (S/N): ")
-        if confirmar.lower() == 's':
+        if confirmar.lower() == "s":
             cliente.eliminar_cliente(c["id"])
             print("Cliente eliminado correctamente.")
         else:
