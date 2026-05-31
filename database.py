@@ -1,7 +1,10 @@
 from datetime import date
 
 lista_de_autos = []
-contador_id = 1
+contador_id_autos = 1
+
+lista_de_clientes = []
+contador_id_clientes = 1
 
 
 def obtener_todos():
@@ -11,9 +14,9 @@ def obtener_todos():
 
 def guardar_auto(datos_auto):
     """Agrega un nuevo auto a la lista."""
-    global contador_id
+    global contador_id_autos
     auto_dict = {
-        "id": contador_id,
+        "id": contador_id_autos,
         "patente": datos_auto[0],
         "marca": datos_auto[1],
         "modelo": datos_auto[2],
@@ -24,7 +27,7 @@ def guardar_auto(datos_auto):
         "fecha_ingreso": datos_auto[7],
     }
     lista_de_autos.append(auto_dict)
-    contador_id += 1
+    contador_id_autos += 1
 
 
 def buscar_por_campo(campo, valor):
@@ -65,3 +68,57 @@ def dar_de_baja(id_auto):
     """Elimina un registro de la lista."""
     global lista_de_autos
     lista_de_autos = [auto for auto in lista_de_autos if auto["id"] != id_auto]
+
+
+# --- Funciones de Clientes ---
+
+def obtener_todos_clientes():
+    """Retorna la lista completa de clientes."""
+    return lista_de_clientes
+
+
+def guardar_cliente(datos_cliente):
+    """Agrega un nuevo cliente a la lista."""
+    global contador_id_clientes
+    cliente_dict = {
+        "id": contador_id_clientes,
+        "dni": datos_cliente["dni"],
+        "nombre": datos_cliente["nombre"],
+        "telefono": datos_cliente["telefono"],
+        "email": datos_cliente.get("email", ""),
+        "localidad": datos_cliente["localidad"],
+        "busqueda": datos_cliente["busqueda"],
+        "compras": [],  # Lista de IDs de autos comprados
+        "reservas": [],  # Lista de IDs de autos reservados
+    }
+    lista_de_clientes.append(cliente_dict)
+    contador_id_clientes += 1
+    return cliente_dict["id"]
+
+
+def buscar_cliente_por_dni(dni):
+    """Busca un cliente por su DNI."""
+    for cliente in lista_de_clientes:
+        if cliente["dni"] == dni:
+            return cliente
+    return None
+
+
+def buscar_clientes_por_nombre(nombre):
+    """Busca clientes que coincidan con el nombre (parcial)."""
+    return [c for c in lista_de_clientes if nombre.lower() in c["nombre"].lower()]
+
+
+def actualizar_cliente(id_cliente, nuevos_datos):
+    """Actualiza datos de contacto de un cliente."""
+    for cliente in lista_de_clientes:
+        if cliente["id"] == id_cliente:
+            cliente.update(nuevos_datos)
+            return True
+    return False
+
+
+def eliminar_cliente(id_cliente):
+    """Elimina un cliente de la lista."""
+    global lista_de_clientes
+    lista_de_clientes = [c for c in lista_de_clientes if c["id"] != id_cliente]

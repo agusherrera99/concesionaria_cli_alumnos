@@ -1,6 +1,7 @@
 import os
 from inspect import cleandoc
 import menu_autos
+import menu_clientes
 
 
 def iniciar():
@@ -19,6 +20,7 @@ def mostrar_menu_principal():
     =============
 
     1. Autos en stock
+    2. Gestión de Clientes
     0. Salir
 
     ¿Qué quieres hacer? """
@@ -31,6 +33,9 @@ def mostrar_menu_principal():
             case "1":
                 limpiar_menu()
                 menu_autos.iniciar()
+            case "2":
+                limpiar_menu()
+                menu_clientes.iniciar()
             case "0":
                 print("\n¡Gracias por usar el sistema! Hasta pronto.")
                 break
