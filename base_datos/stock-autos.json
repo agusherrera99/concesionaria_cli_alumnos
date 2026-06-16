@@ -1,0 +1,46 @@
+[
+    {
+        "Id": 1,
+        "Patente": "SIA 507",
+        "Marca": "FORD",
+        "Modelo": "ESCORT",
+        "Año": 1994,
+        "Kilómetros": 170000,
+        "Precio de venta": 500000.0,
+        "Estado": "RESERVADO",
+        "Fecha ingreso stock": "25/05/2026"
+    },
+    {
+        "Id": 3,
+        "Patente": "FJO 765",
+        "Marca": "RENAULT",
+        "Modelo": "KANGOO",
+        "Año": 2006,
+        "Kilómetros": 270000,
+        "Precio de venta": 350000.0,
+        "Estado": "DISPONIBLE",
+        "Fecha ingreso stock": "27/05/2026"
+    },
+    {
+        "Id": 4,
+        "Patente": "FRE 789",
+        "Marca": "FORD",
+        "Modelo": "RANGER",
+        "Año": 2006,
+        "Kilómetros": 300000,
+        "Precio de venta": 400000.0,
+        "Estado": "DISPONIBLE",
+        "Fecha ingreso stock": "28/04/2026"
+    },
+    {
+        "Id": 5,
+        "Patente": "AA 974 CD",
+        "Marca": "FORD",
+        "Modelo": "RANGER",
+        "Año": 2017,
+        "Kilómetros": 150000,
+        "Precio de venta": 700000.0,
+        "Estado": "DISPONIBLE",
+        "Fecha ingreso stock": "27/04/2026"
+    }
+]

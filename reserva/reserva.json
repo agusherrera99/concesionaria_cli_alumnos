@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "id_auto": 1,
+        "id_cliente": 1,
+        "id_vendedor": 1,
+        "fecha_reserva": "2026-06-08",
+        "monto_sena": 23000.0,
+        "fecha_limite": "2026-08-23",
+        "estado": "pendiente"
+    },
+    {
+        "id": 2,
+        "id_auto": 1,
+        "id_cliente": 1,
+        "id_vendedor": 1,
+        "fecha_reserva": "2026-06-10",
+        "monto_sena": 25366.0,
+        "fecha_limite": "2026-08-25",
+        "estado": "Cancelada"
+    }
+]

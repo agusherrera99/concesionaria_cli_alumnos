@@ -1,0 +1,38 @@
+{
+    "contador": 3,
+    "lista": [
+        {
+            "id": 1,
+            "dni": 25487485,
+            "nombre": "Gaston perez",
+            "telefono": "11-5487-4830",
+            "email": "",
+            "localidad": "Ramallo",
+            "busqueda": "KANGOO",
+            "compras": [],
+            "reservas": []
+        },
+        {
+            "id": 2,
+            "dni": 23159845,
+            "nombre": "Gaston martinez",
+            "telefono": "11-4568-4567",
+            "email": "",
+            "localidad": "La plata",
+            "busqueda": "CAMIONETA",
+            "compras": [],
+            "reservas": []
+        },
+        {
+            "id": 3,
+            "dni": 12354159,
+            "nombre": "Raul gonzalez",
+            "telefono": "1264-5479",
+            "email": "",
+            "localidad": "Bransen",
+            "busqueda": "COMPACTO",
+            "compras": [],
+            "reservas": []
+        }
+    ]
+}
